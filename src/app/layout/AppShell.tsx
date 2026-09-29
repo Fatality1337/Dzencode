@@ -1,2 +1,2 @@
 import type { PropsWithChildren } from 'react'; import { NavigationMenu } from '../../widgets/NavigationMenu/NavigationMenu'; import { TopMenu } from '../../widgets/TopMenu/TopMenu';
-export function AppShell({ children }: PropsWithChildren) { return <div className="app"><NavigationMenu /><main><TopMenu /> <section className="content">{children}</section></main></div>; }
+export function AppShell({ children }: PropsWithChildren) { return <div className="app min-h-screen bg-slate-50 text-slate-900"><NavigationMenu /><main className="min-w-0 flex-1"><TopMenu /> <section className="content mx-auto max-w-[1450px]">{children}</section></main></div>; }
