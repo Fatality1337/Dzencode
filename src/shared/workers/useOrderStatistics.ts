@@ -11,6 +11,7 @@ export function useOrderStatistics(products: Product[]) {
       types: products.map((product) => product.type),
     });
     return () => worker.terminate();
-  }, [products]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(products.map(p => ({ price: p.price, type: p.type })))]);
   return result;
 }

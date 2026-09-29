@@ -18,6 +18,8 @@ export function ConfirmModal({
   const cancelRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     cancelRef.current?.focus();
+  }, []);
+  useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && !busy) onClose();
     };
