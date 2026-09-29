@@ -23,11 +23,16 @@ test.describe('Inventory flows', () => {
   });
 
   test('updates active sessions between browser contexts', async ({ browser }) => {
-    const first = await browser.newContext(); const second = await browser.newContext();
-    const firstPage = await first.newPage(); const secondPage = await second.newPage();
-    await firstPage.goto('/orders'); await expect(firstPage.getByText(/Активные сессии:/)).toBeVisible();
-    await secondPage.goto('/orders'); await expect(firstPage.getByText(/Активные сессии:\s*2/)).toBeVisible();
-    await second.close(); await expect(firstPage.getByText(/Активные сессии:\s*1/)).toBeVisible();
+    const first = await browser.newContext();
+    const second = await browser.newContext();
+    const firstPage = await first.newPage();
+    const secondPage = await second.newPage();
+    await firstPage.goto('/orders');
+    await expect(firstPage.getByText(/Активные сессии:/)).toBeVisible();
+    await secondPage.goto('/orders');
+    await expect(firstPage.getByText(/Активные сессии:\s*2/)).toBeVisible();
+    await second.close();
+    await expect(firstPage.getByText(/Активные сессии:\s*1/)).toBeVisible();
     await first.close();
   });
 });

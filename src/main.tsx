@@ -16,16 +16,32 @@ const UsersPage = lazy(() => import('./pages/UsersPage/UsersPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage/SettingsPage'));
 
 function App() {
-  return <BrowserRouter><AppShell><Suspense fallback={<div className="page-loading">Загрузка раздела…</div>}><Routes>
-    <Route path="/" element={<Navigate to="/orders" replace />} />
-    <Route path="/orders" element={<OrdersPage />} />
-    <Route path="/products" element={<ProductsPage />} />
-    <Route path="/groups" element={<GroupsPage />} />
-    <Route path="/users" element={<UsersPage />} />
-    <Route path="/settings" element={<SettingsPage />} />
-    <Route path="*" element={<NotFoundPage />} />
-  </Routes></Suspense></AppShell></BrowserRouter>;
+  return (
+    <BrowserRouter>
+      <AppShell>
+        <Suspense fallback={<div className="page-loading">Загрузка раздела…</div>}>
+          <Routes>
+            <Route path="/" element={<Navigate to="/orders" replace />} />
+            <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/products" element={<ProductsPage />} />
+            <Route path="/groups" element={<GroupsPage />} />
+            <Route path="/users" element={<UsersPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Suspense>
+      </AppShell>
+    </BrowserRouter>
+  );
 }
 
-createRoot(document.getElementById('root')!).render(<React.StrictMode><ErrorBoundary><Provider store={store}><App /></Provider></ErrorBoundary></React.StrictMode>);
+createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </ErrorBoundary>
+  </React.StrictMode>,
+);
 if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));

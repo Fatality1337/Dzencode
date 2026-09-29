@@ -1,3 +1,39 @@
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-export function NavigationMenu() { const { t } = useTranslation(); const links = [['/orders', 'orders', '↗'], ['/groups', 'groups', '◇'], ['/products', 'products', '▣'], ['/users', 'users', '♙'], ['/settings', 'settings', '⚙']] as const; return <aside className="sidebar flex min-h-screen w-64 flex-col border-r border-slate-200 bg-white px-4 py-7 shadow-sm"><div className="brand flex items-center gap-2 text-xl font-bold tracking-tight"><i className="grid size-7 place-items-center rounded-lg bg-indigo-600 text-white not-italic">i</i> inventory</div><div className="workspace mt-3 flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50 px-3 py-3 text-xs font-semibold"><span className="text-emerald-500">●</span> Основной склад</div><nav className="mt-6 flex flex-col gap-1" aria-label="Основная навигация">{links.map(([to, key, icon]) => <NavLink key={to} className={({ isActive }) => `rounded-xl px-3 py-3 text-sm font-medium transition-colors ${isActive ? 'bg-indigo-50 text-indigo-600 shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}`} to={to}><span className="mr-2" aria-hidden="true">{icon}</span>{t(key)}</NavLink>)}</nav><div className="mt-auto border-t border-slate-100 pt-5 text-xs text-slate-500">ⓘ Нужна помощь?</div></aside>; }
+export function NavigationMenu() {
+  const { t } = useTranslation();
+  const links = [
+    ['/orders', 'orders', '↗'],
+    ['/groups', 'groups', '◇'],
+    ['/products', 'products', '▣'],
+    ['/users', 'users', '♙'],
+    ['/settings', 'settings', '⚙'],
+  ] as const;
+  return (
+    <aside className="sidebar flex min-h-screen w-64 flex-col border-r border-slate-200 bg-white px-4 py-7 shadow-sm">
+      <div className="brand flex items-center gap-2 text-xl font-bold tracking-tight">
+        <i className="grid size-7 place-items-center rounded-lg bg-indigo-600 text-white not-italic">i</i> inventory
+      </div>
+      <div className="workspace mt-3 flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50 px-3 py-3 text-xs font-semibold">
+        <span className="text-emerald-500">●</span> Основной склад
+      </div>
+      <nav className="mt-6 flex flex-col gap-1" aria-label="Основная навигация">
+        {links.map(([to, key, icon]) => (
+          <NavLink
+            key={to}
+            className={({ isActive }) =>
+              `rounded-xl px-3 py-3 text-sm font-medium transition-colors ${isActive ? 'bg-indigo-50 text-indigo-600 shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}`
+            }
+            to={to}
+          >
+            <span className="mr-2" aria-hidden="true">
+              {icon}
+            </span>
+            {t(key)}
+          </NavLink>
+        ))}
+      </nav>
+      <div className="mt-auto border-t border-slate-100 pt-5 text-xs text-slate-500">ⓘ Нужна помощь?</div>
+    </aside>
+  );
+}

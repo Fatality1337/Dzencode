@@ -3,4 +3,63 @@ import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '../../app/store/hooks';
 import { setCurrency, setLanguage } from '../../app/store/settingsSlice';
 import i18n from '../../shared/i18n';
-export default function SettingsPage() { const dispatch = useAppDispatch(); const settings = useAppSelector((state) => state.settings); const { t } = useTranslation(); useEffect(() => { void i18n.changeLanguage(settings.language); }, [settings.language]); return <><div className="heading"><div><label>WORKSPACE</label><h1 className="text-3xl font-bold tracking-tight">{t('settings')}</h1><p>Персонализируйте рабочее пространство</p></div></div><div className="settings-card max-w-2xl rounded-2xl border border-slate-200 bg-white p-7 shadow-sm"><h2 className="text-xl font-bold">Общие настройки</h2><p>Язык и валюта интерфейса сохраняются в браузере.</p><hr /><label>Название рабочего пространства<input defaultValue="Основной склад" /></label><label>Язык интерфейса<select value={settings.language} onChange={(event) => { const language = event.target.value as 'ru' | 'en' | 'uk'; dispatch(setLanguage(language)); void i18n.changeLanguage(language); }}><option value="ru">Русский</option><option value="en">English</option><option value="uk">Українська</option></select></label><label>Валюта по умолчанию<select value={settings.currency} onChange={(event) => dispatch(setCurrency(event.target.value as 'USD' | 'EUR' | 'UAH'))}><option value="USD">USD — Доллар США</option><option value="EUR">EUR — Евро</option><option value="UAH">UAH — Гривна</option></select></label><button className="primary rounded-xl bg-indigo-600 px-4 py-3 font-semibold text-white shadow-lg shadow-indigo-200 transition hover:bg-indigo-700" onClick={() => undefined}>Сохранить изменения</button></div></>; }
+export default function SettingsPage() {
+  const dispatch = useAppDispatch();
+  const settings = useAppSelector((state) => state.settings);
+  const { t } = useTranslation();
+  useEffect(() => {
+    void i18n.changeLanguage(settings.language);
+  }, [settings.language]);
+  return (
+    <>
+      <div className="heading">
+        <div>
+          <label>WORKSPACE</label>
+          <h1 className="text-3xl font-bold tracking-tight">{t('settings')}</h1>
+          <p>Персонализируйте рабочее пространство</p>
+        </div>
+      </div>
+      <div className="settings-card max-w-2xl rounded-2xl border border-slate-200 bg-white p-7 shadow-sm">
+        <h2 className="text-xl font-bold">Общие настройки</h2>
+        <p>Язык и валюта интерфейса сохраняются в браузере.</p>
+        <hr />
+        <label>
+          Название рабочего пространства
+          <input defaultValue="Основной склад" />
+        </label>
+        <label>
+          Язык интерфейса
+          <select
+            value={settings.language}
+            onChange={(event) => {
+              const language = event.target.value as 'ru' | 'en' | 'uk';
+              dispatch(setLanguage(language));
+              void i18n.changeLanguage(language);
+            }}
+          >
+            <option value="ru">Русский</option>
+            <option value="en">English</option>
+            <option value="uk">Українська</option>
+          </select>
+        </label>
+        <label>
+          Валюта по умолчанию
+          <select
+            value={settings.currency}
+            onChange={(event) => dispatch(setCurrency(event.target.value as 'USD' | 'EUR' | 'UAH'))}
+          >
+            <option value="USD">USD — Доллар США</option>
+            <option value="EUR">EUR — Евро</option>
+            <option value="UAH">UAH — Гривна</option>
+          </select>
+        </label>
+        <button
+          className="primary rounded-xl bg-indigo-600 px-4 py-3 font-semibold text-white shadow-lg shadow-indigo-200 transition hover:bg-indigo-700"
+          onClick={() => undefined}
+        >
+          Сохранить изменения
+        </button>
+      </div>
+    </>
+  );
+}

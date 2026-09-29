@@ -1,3 +1,49 @@
-import {eventBus} from '../events/eventBus.js';import {GroupRepository} from '../repositories/groupRepository.js';import {UserRepository} from '../repositories/userRepository.js';import {PrismaGroupRepository,PrismaUserRepository} from '../repositories/prismaManagementRepository.js';import type {User} from '../domain.js';import type {GroupRepositoryContract,UserRepositoryContract} from '../repositories/managementTypes.js';const useDatabase=process.env.USE_DATABASE==='true';
-export class GroupService{constructor(private readonly repo:GroupRepositoryContract=useDatabase?new PrismaGroupRepository():new GroupRepository()){}list(){return this.repo.list()}create(name:string,description:string){const group=this.repo.create(name,description);eventBus.emit('GROUP_CREATED',{name});return group}update(id:number,data:{name?:string;description?:string}){return this.repo.update(id,data)}delete(id:number){const result=this.repo.delete(id);eventBus.emit('GROUP_DELETED',{id});return result}}
-export class UserService{constructor(private readonly repo:UserRepositoryContract=useDatabase?new PrismaUserRepository():new UserRepository()){}list(){return this.repo.list()}create(name:string,email:string,role:User['role']){const user=this.repo.create(name,email,role);eventBus.emit('USER_CREATED',{email});return user}update(id:number,data:{name?:string;email?:string;role?:User['role']}){return this.repo.update(id,data)}delete(id:number){const result=this.repo.delete(id);eventBus.emit('USER_DELETED',{id});return result}}
+import { eventBus } from '../events/eventBus.js';
+import { GroupRepository } from '../repositories/groupRepository.js';
+import { UserRepository } from '../repositories/userRepository.js';
+import { PrismaGroupRepository, PrismaUserRepository } from '../repositories/prismaManagementRepository.js';
+import type { User } from '../domain.js';
+import type { GroupRepositoryContract, UserRepositoryContract } from '../repositories/managementTypes.js';
+const useDatabase = process.env.USE_DATABASE === 'true';
+export class GroupService {
+  constructor(
+    private readonly repo: GroupRepositoryContract = useDatabase ? new PrismaGroupRepository() : new GroupRepository(),
+  ) {}
+  list() {
+    return this.repo.list();
+  }
+  create(name: string, description: string) {
+    const group = this.repo.create(name, description);
+    eventBus.emit('GROUP_CREATED', { name });
+    return group;
+  }
+  update(id: number, data: { name?: string; description?: string }) {
+    return this.repo.update(id, data);
+  }
+  delete(id: number) {
+    const result = this.repo.delete(id);
+    eventBus.emit('GROUP_DELETED', { id });
+    return result;
+  }
+}
+export class UserService {
+  constructor(
+    private readonly repo: UserRepositoryContract = useDatabase ? new PrismaUserRepository() : new UserRepository(),
+  ) {}
+  list() {
+    return this.repo.list();
+  }
+  create(name: string, email: string, role: User['role']) {
+    const user = this.repo.create(name, email, role);
+    eventBus.emit('USER_CREATED', { email });
+    return user;
+  }
+  update(id: number, data: { name?: string; email?: string; role?: User['role'] }) {
+    return this.repo.update(id, data);
+  }
+  delete(id: number) {
+    const result = this.repo.delete(id);
+    eventBus.emit('USER_DELETED', { id });
+    return result;
+  }
+}

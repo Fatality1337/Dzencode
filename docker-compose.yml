@@ -6,10 +6,10 @@ services:
       MYSQL_USER: inventory
       MYSQL_PASSWORD: inventory
       MYSQL_ROOT_PASSWORD: root
-    ports: ["3306:3306"]
+    ports: ['3306:3306']
     volumes: [inventory_mysql:/var/lib/mysql]
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
       interval: 5s
       timeout: 5s
       retries: 20
@@ -17,15 +17,15 @@ services:
     build: { context: ., dockerfile: server/Dockerfile }
     environment:
       DATABASE_URL: mysql://inventory:inventory@mysql:3306/inventory
-      USE_DATABASE: "true"
+      USE_DATABASE: 'true'
       PORT: 4000
       CLIENT_URL: http://localhost:5173
-    ports: ["4000:4000"]
+    ports: ['4000:4000']
     depends_on:
       mysql: { condition: service_healthy }
   frontend:
     build: { context: ., dockerfile: Dockerfile }
-    ports: ["5173:80"]
+    ports: ['5173:80']
     depends_on: [backend]
 volumes:
   inventory_mysql:

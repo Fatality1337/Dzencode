@@ -1,1 +1,12 @@
-import 'dotenv/config'; import http from 'node:http'; import {Server} from 'socket.io'; import {app} from './app.js'; import {attachSessionManager} from './websocket/sessionManager.js'; const port=Number(process.env.PORT||4000);const server=http.createServer(app);const io=new Server(server,{cors:{origin:process.env.CLIENT_URL||'http://localhost:5173'}});attachSessionManager(io);server.listen(port,()=>{if(process.env.NODE_ENV!=='test')process.stdout.write(`API listening on ${port}\n`)});
+import 'dotenv/config';
+import http from 'node:http';
+import { Server } from 'socket.io';
+import { app } from './app.js';
+import { attachSessionManager } from './websocket/sessionManager.js';
+const port = Number(process.env.PORT || 4000);
+const server = http.createServer(app);
+const io = new Server(server, { cors: { origin: process.env.CLIENT_URL || 'http://localhost:5173' } });
+attachSessionManager(io);
+server.listen(port, () => {
+  if (process.env.NODE_ENV !== 'test') process.stdout.write(`API listening on ${port}\n`);
+});

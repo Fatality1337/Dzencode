@@ -1,3 +1,12 @@
-import { buildSchema } from 'graphql'; import { orderService } from '../controllers/ordersController.js'; import { ProductService } from '../services/productService.js';
-export const schema=buildSchema(`type Product { id: ID!, name: String!, serialNumber: String!, type: String!, status: String!, price: Float!, currency: String!, warrantyUntil: String!, orderId: ID! } type Order { id: ID!, name: String!, createdAt: String!, updatedAt: String!, supplier: String!, products: [Product!]! } type Query { orders: [Order!]!, order(id: ID!): Order, products: [Product!]! } type Mutation { deleteOrder(id: ID!): Boolean! }`);
-export const root={orders:()=>orderService.list(),order:({id}:{id:string})=>orderService.get(Number(id)),products:()=>new ProductService().list(),deleteOrder:({id}:{id:string})=>orderService.delete(Number(id))};
+import { buildSchema } from 'graphql';
+import { orderService } from '../controllers/ordersController.js';
+import { ProductService } from '../services/productService.js';
+export const schema = buildSchema(
+  `type Product { id: ID!, name: String!, serialNumber: String!, type: String!, status: String!, price: Float!, currency: String!, warrantyUntil: String!, orderId: ID! } type Order { id: ID!, name: String!, createdAt: String!, updatedAt: String!, supplier: String!, products: [Product!]! } type Query { orders: [Order!]!, order(id: ID!): Order, products: [Product!]! } type Mutation { deleteOrder(id: ID!): Boolean! }`,
+);
+export const root = {
+  orders: () => orderService.list(),
+  order: ({ id }: { id: string }) => orderService.get(Number(id)),
+  products: () => new ProductService().list(),
+  deleteOrder: ({ id }: { id: string }) => orderService.delete(Number(id)),
+};

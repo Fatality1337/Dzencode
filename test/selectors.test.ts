@@ -6,9 +6,17 @@ import { setSearch } from '../src/app/store/uiSlice';
 
 describe('product selectors', () => {
   it('filters products by type and global search query', () => {
-    const typeState = { ...store.getState(), products: { ...store.getState().products, filter: 'Ноутбуки' as const }, ui: { ...store.getState().ui, search: '' } };
+    const typeState = {
+      ...store.getState(),
+      products: { ...store.getState().products, filter: 'Ноутбуки' as const },
+      ui: { ...store.getState().ui, search: '' },
+    };
     expect(selectFilteredProducts(typeState)).toHaveLength(1);
-    const searchState = { ...store.getState(), products: { ...store.getState().products, filter: 'all' as const }, ui: { ...store.getState().ui, search: 'Dell' } };
+    const searchState = {
+      ...store.getState(),
+      products: { ...store.getState().products, filter: 'all' as const },
+      ui: { ...store.getState().ui, search: 'Dell' },
+    };
     expect(selectFilteredProducts(searchState).map((product) => product.name)).toEqual(['Dell UltraSharp U2723QE']);
   });
 

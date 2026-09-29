@@ -1,3 +1,26 @@
-import { eventBus } from '../events/eventBus.js'; import { OrderRepository } from '../repositories/orderRepository.js'; import { PrismaOrderRepository } from '../repositories/prismaOrderRepository.js'; import type {CreateOrderInput} from '../domain.js'; import type {OrderRepositoryContract} from '../repositories/repositoryTypes.js';
-const repository:OrderRepositoryContract=process.env.USE_DATABASE==='true'?new PrismaOrderRepository():new OrderRepository();
-export class OrderService { constructor(private readonly orderRepository:OrderRepositoryContract=repository){} async list(){return this.orderRepository.findAll()} async get(id:number){return this.orderRepository.findById(id)} async create(input:CreateOrderInput){const order=await this.orderRepository.create(input);eventBus.emit('ORDER_CREATED',{id:order.id});return order} async delete(id:number){const deleted=await this.orderRepository.delete(id);if(deleted)eventBus.emit('ORDER_DELETED',{id});return deleted} }
+import { eventBus } from '../events/eventBus.js';
+import { OrderRepository } from '../repositories/orderRepository.js';
+import { PrismaOrderRepository } from '../repositories/prismaOrderRepository.js';
+import type { CreateOrderInput } from '../domain.js';
+import type { OrderRepositoryContract } from '../repositories/repositoryTypes.js';
+const repository: OrderRepositoryContract =
+  process.env.USE_DATABASE === 'true' ? new PrismaOrderRepository() : new OrderRepository();
+export class OrderService {
+  constructor(private readonly orderRepository: OrderRepositoryContract = repository) {}
+  async list() {
+    return this.orderRepository.findAll();
+  }
+  async get(id: number) {
+    return this.orderRepository.findById(id);
+  }
+  async create(input: CreateOrderInput) {
+    const order = await this.orderRepository.create(input);
+    eventBus.emit('ORDER_CREATED', { id: order.id });
+    return order;
+  }
+  async delete(id: number) {
+    const deleted = await this.orderRepository.delete(id);
+    if (deleted) eventBus.emit('ORDER_DELETED', { id });
+    return deleted;
+  }
+}

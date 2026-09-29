@@ -1,1 +1,20 @@
-import express from 'express'; import cors from 'cors'; import helmet from 'helmet'; import {createHandler} from 'graphql-http/lib/use/express'; import api from './routes/api.js'; import {schema,root} from './graphql/schema.js'; export const app=express();app.use(helmet()).use(cors({origin:process.env.CLIENT_URL||'http://localhost:5173'})).use(express.json());app.get('/health',(_req,res)=>res.json({status:'ok'}));app.use('/api',api);app.all('/graphql',createHandler({schema,rootValue:root}));app.use((err:Error,_req:express.Request,res:express.Response,next:express.NextFunction)=>{void next;return res.status(500).json({message:process.env.NODE_ENV==='production'?'Internal server error':err.message})});
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import { createHandler } from 'graphql-http/lib/use/express';
+import api from './routes/api.js';
+import { schema, root } from './graphql/schema.js';
+export const app = express();
+app
+  .use(helmet())
+  .use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }))
+  .use(express.json());
+app.get('/health', (_req, res) => res.json({ status: 'ok' }));
+app.use('/api', api);
+app.all('/graphql', createHandler({ schema, rootValue: root }));
+app.use((err: Error, _req: express.Request, res: express.Response, next: express.NextFunction) => {
+  void next;
+  return res
+    .status(500)
+    .json({ message: process.env.NODE_ENV === 'production' ? 'Internal server error' : err.message });
+});

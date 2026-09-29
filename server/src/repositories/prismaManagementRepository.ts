@@ -1,1 +1,37 @@
-import {PrismaClient} from '@prisma/client';import type {Group,User} from '../domain.js';import type {GroupRepositoryContract,UserRepositoryContract} from './managementTypes.js';const prisma=new PrismaClient();export class PrismaGroupRepository implements GroupRepositoryContract{list(){return prisma.group.findMany()}create(name:string,description:string){return prisma.group.create({data:{name,description}})}update(id:number,data:Partial<Group>){return prisma.group.update({where:{id},data}).catch(()=>undefined)}async delete(id:number){return(await prisma.group.deleteMany({where:{id}})).count>0}}export class PrismaUserRepository implements UserRepositoryContract{list(){return prisma.user.findMany().then((items)=>items.map((user)=>({...user,role:user.role as User['role']})))}create(name:string,email:string,role:User['role']){return prisma.user.create({data:{name,email,role}}).then((user)=>({...user,role:user.role as User['role']}))}update(id:number,data:Partial<User>){return prisma.user.update({where:{id},data}).then((user)=>({...user,role:user.role as User['role']})).catch(()=>undefined)}async delete(id:number){return(await prisma.user.deleteMany({where:{id}})).count>0}}
+import { PrismaClient } from '@prisma/client';
+import type { Group, User } from '../domain.js';
+import type { GroupRepositoryContract, UserRepositoryContract } from './managementTypes.js';
+const prisma = new PrismaClient();
+export class PrismaGroupRepository implements GroupRepositoryContract {
+  list() {
+    return prisma.group.findMany();
+  }
+  create(name: string, description: string) {
+    return prisma.group.create({ data: { name, description } });
+  }
+  update(id: number, data: Partial<Group>) {
+    return prisma.group.update({ where: { id }, data }).catch(() => undefined);
+  }
+  async delete(id: number) {
+    return (await prisma.group.deleteMany({ where: { id } })).count > 0;
+  }
+}
+export class PrismaUserRepository implements UserRepositoryContract {
+  list() {
+    return prisma.user.findMany().then((items) => items.map((user) => ({ ...user, role: user.role as User['role'] })));
+  }
+  create(name: string, email: string, role: User['role']) {
+    return prisma.user
+      .create({ data: { name, email, role } })
+      .then((user) => ({ ...user, role: user.role as User['role'] }));
+  }
+  update(id: number, data: Partial<User>) {
+    return prisma.user
+      .update({ where: { id }, data })
+      .then((user) => ({ ...user, role: user.role as User['role'] }))
+      .catch(() => undefined);
+  }
+  async delete(id: number) {
+    return (await prisma.user.deleteMany({ where: { id } })).count > 0;
+  }
+}

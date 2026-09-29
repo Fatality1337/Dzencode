@@ -3,10 +3,75 @@ import type { Order, OrderId } from '../../shared/types/domain';
 import { seedOrders } from '../../shared/data/seed';
 import { ordersApi } from '../../shared/api/ordersApi';
 import type { CreateOrderPayload } from '../../shared/api/ordersApi';
-interface OrdersState { items: Order[]; selectedId: OrderId | null; loading: boolean; error: string | null; }
+interface OrdersState {
+  items: Order[];
+  selectedId: OrderId | null;
+  loading: boolean;
+  error: string | null;
+}
 const initialState: OrdersState = { items: seedOrders, selectedId: seedOrders[0].id, loading: false, error: null };
 export const fetchOrders = createAsyncThunk('orders/fetch', () => ordersApi.list());
-export const createOrder = createAsyncThunk('orders/create', (payload: CreateOrderPayload) => ordersApi.create(payload));
-export const removeOrder = createAsyncThunk('orders/remove', async (id: OrderId) => { await ordersApi.remove(id); return id; });
-const slice = createSlice({ name: 'orders', initialState, reducers: { selectOrder: (state, action: PayloadAction<OrderId | null>) => { state.selectedId = action.payload; }, deleteOrder: (state, action: PayloadAction<OrderId>) => { state.items = state.items.filter((order) => order.id !== action.payload); if (state.selectedId === action.payload) state.selectedId = null; } }, extraReducers: (builder) => { builder.addCase(fetchOrders.pending, (state) => { state.loading = true; state.error = null; }).addCase(fetchOrders.fulfilled, (state, action) => { state.items = action.payload; state.loading = false; state.selectedId = action.payload[0]?.id ?? null; }).addCase(fetchOrders.rejected, (state, action) => { state.loading = false; state.error = action.error.message ?? 'Не удалось загрузить приходы'; }).addCase(createOrder.pending, (state) => { state.loading = true; state.error = null; }).addCase(createOrder.fulfilled, (state, action) => { state.items.push(action.payload); state.selectedId = action.payload.id; state.loading = false; }).addCase(createOrder.rejected, (state, action) => { state.loading = false; state.error = action.error.message ?? 'Не удалось создать приход'; }).addCase(removeOrder.pending, (state) => { state.loading = true; state.error = null; }).addCase(removeOrder.fulfilled, (state, action) => { state.items = state.items.filter((order) => order.id !== action.payload); if (state.selectedId === action.payload) state.selectedId = null; state.loading = false; }).addCase(removeOrder.rejected, (state, action) => { state.loading = false; state.error = action.error.message ?? 'Не удалось удалить приход'; }); } });
-export const { selectOrder, deleteOrder } = slice.actions; export default slice.reducer;
+export const createOrder = createAsyncThunk('orders/create', (payload: CreateOrderPayload) =>
+  ordersApi.create(payload),
+);
+export const removeOrder = createAsyncThunk('orders/remove', async (id: OrderId) => {
+  await ordersApi.remove(id);
+  return id;
+});
+const slice = createSlice({
+  name: 'orders',
+  initialState,
+  reducers: {
+    selectOrder: (state, action: PayloadAction<OrderId | null>) => {
+      state.selectedId = action.payload;
+    },
+    deleteOrder: (state, action: PayloadAction<OrderId>) => {
+      state.items = state.items.filter((order) => order.id !== action.payload);
+      if (state.selectedId === action.payload) state.selectedId = null;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchOrders.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchOrders.fulfilled, (state, action) => {
+        state.items = action.payload;
+        state.loading = false;
+        state.selectedId = action.payload[0]?.id ?? null;
+      })
+      .addCase(fetchOrders.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? 'Не удалось загрузить приходы';
+      })
+      .addCase(createOrder.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createOrder.fulfilled, (state, action) => {
+        state.items.push(action.payload);
+        state.selectedId = action.payload.id;
+        state.loading = false;
+      })
+      .addCase(createOrder.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? 'Не удалось создать приход';
+      })
+      .addCase(removeOrder.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(removeOrder.fulfilled, (state, action) => {
+        state.items = state.items.filter((order) => order.id !== action.payload);
+        if (state.selectedId === action.payload) state.selectedId = null;
+        state.loading = false;
+      })
+      .addCase(removeOrder.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? 'Не удалось удалить приход';
+      });
+  },
+});
+export const { selectOrder, deleteOrder } = slice.actions;
+export default slice.reducer;

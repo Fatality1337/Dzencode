@@ -5,5 +5,12 @@ const filter = (state: RootState) => state.products.filter;
 const search = (state: RootState) => state.ui.search;
 export const selectFilteredProducts = createSelector([allProducts, filter, search], (products, current, query) => {
   const normalizedQuery = query.trim().toLocaleLowerCase();
-  return products.filter((product) => (current === 'all' || product.type === current) && (!normalizedQuery || [product.name, product.serialNumber, product.type, product.status].some((value) => value.toLocaleLowerCase().includes(normalizedQuery))));
+  return products.filter(
+    (product) =>
+      (current === 'all' || product.type === current) &&
+      (!normalizedQuery ||
+        [product.name, product.serialNumber, product.type, product.status].some((value) =>
+          value.toLocaleLowerCase().includes(normalizedQuery),
+        )),
+  );
 });

@@ -1,1 +1,51 @@
-import {PrismaClient} from '@prisma/client';import type {CreateProductInput,Product} from '../domain.js';import type {ProductRepositoryContract} from './productRepositoryTypes.js';const prisma=new PrismaClient();const map=(p:{id:number;name:string;serialNumber:string;type:string;status:string;price:{toString():string};currency:string;warrantyUntil:Date;orderId:number}):Product=>({...p,price:Number(p.price),currency:p.currency as Product['currency'],warrantyUntil:p.warrantyUntil.toISOString().slice(0,10)});export class PrismaProductRepository implements ProductRepositoryContract{findAll(){return prisma.product.findMany().then((items)=>items.map(map))}create(input:CreateProductInput){return prisma.product.create({data:{...input,price:input.price,currency:'USD',status:'Свободен',serialNumber:`NEW-${Date.now()}`,warrantyUntil:new Date(input.warrantyUntil)}}).then(map)}update(id:number,input:Partial<CreateProductInput>){return prisma.product.update({where:{id},data:{...input,warrantyUntil:input.warrantyUntil?new Date(input.warrantyUntil):undefined}}).then(map).catch(()=>undefined)}async delete(id:number){return (await prisma.product.deleteMany({where:{id}})).count>0}}
+import { PrismaClient } from '@prisma/client';
+import type { CreateProductInput, Product } from '../domain.js';
+import type { ProductRepositoryContract } from './productRepositoryTypes.js';
+const prisma = new PrismaClient();
+const map = (p: {
+  id: number;
+  name: string;
+  serialNumber: string;
+  type: string;
+  status: string;
+  price: { toString(): string };
+  currency: string;
+  warrantyUntil: Date;
+  orderId: number;
+}): Product => ({
+  ...p,
+  price: Number(p.price),
+  currency: p.currency as Product['currency'],
+  warrantyUntil: p.warrantyUntil.toISOString().slice(0, 10),
+});
+export class PrismaProductRepository implements ProductRepositoryContract {
+  findAll() {
+    return prisma.product.findMany().then((items) => items.map(map));
+  }
+  create(input: CreateProductInput) {
+    return prisma.product
+      .create({
+        data: {
+          ...input,
+          price: input.price,
+          currency: 'USD',
+          status: 'Свободен',
+          serialNumber: `NEW-${Date.now()}`,
+          warrantyUntil: new Date(input.warrantyUntil),
+        },
+      })
+      .then(map);
+  }
+  update(id: number, input: Partial<CreateProductInput>) {
+    return prisma.product
+      .update({
+        where: { id },
+        data: { ...input, warrantyUntil: input.warrantyUntil ? new Date(input.warrantyUntil) : undefined },
+      })
+      .then(map)
+      .catch(() => undefined);
+  }
+  async delete(id: number) {
+    return (await prisma.product.deleteMany({ where: { id } })).count > 0;
+  }
+}
