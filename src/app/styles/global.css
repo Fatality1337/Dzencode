@@ -1,4 +1,20 @@
 @import 'tailwindcss';
+.route-view {
+  animation: route-enter 0.24s ease-out;
+}
+.modal {
+  display: block;
+}
+@keyframes route-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 .page-loading,
 .empty {
   padding: 80px;
@@ -44,4 +60,81 @@
 }
 .order-form .primary {
   margin-top: 10px;
+}
+.detail {
+  position: relative;
+}
+.detail__close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  border: 0;
+  background: transparent;
+  font-size: 24px;
+  color: #8792a0;
+  cursor: pointer;
+}
+.inventory-chart {
+  margin: 0 0 20px;
+}
+.inventory-chart__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.inventory-chart__eyebrow {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+.inventory-chart__title {
+  margin: 4px 0 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+.inventory-chart__total {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-weight: 700;
+}
+.inventory-chart__bars {
+  display: flex;
+  align-items: end;
+  gap: 18px;
+  height: 150px;
+  margin-top: 20px;
+  overflow-x: auto;
+}
+.inventory-chart__item {
+  display: flex;
+  flex: 1 0 70px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: end;
+  gap: 8px;
+  height: 100%;
+  color: #64748b;
+  font-size: 11px;
+  text-align: center;
+}
+.inventory-chart__bar {
+  display: flex;
+  width: 38px;
+  min-height: 22px;
+  align-items: start;
+  justify-content: center;
+  border-radius: 10px 10px 4px 4px;
+  background: linear-gradient(180deg, #6366f1, #a5b4fc);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  padding-top: 4px;
+  transition: height 0.35s ease;
 }

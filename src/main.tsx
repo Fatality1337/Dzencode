@@ -1,10 +1,11 @@
 import React, { Suspense, lazy } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { store } from './app/store';
 import { AppShell } from './app/layout/AppShell';
 import { ErrorBoundary } from './app/providers/ErrorBoundary';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './app/styles/global.css';
 import './shared/i18n';
 
@@ -16,9 +17,10 @@ const UsersPage = lazy(() => import('./pages/UsersPage/UsersPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage/SettingsPage'));
 
 function App() {
+  const { pathname } = useLocation();
   return (
-    <BrowserRouter>
-      <AppShell>
+    <AppShell>
+      <div key={pathname} className="route-view">
         <Suspense fallback={<div className="page-loading">Загрузка раздела…</div>}>
           <Routes>
             <Route path="/" element={<Navigate to="/orders" replace />} />
@@ -30,8 +32,8 @@ function App() {
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
-      </AppShell>
-    </BrowserRouter>
+      </div>
+    </AppShell>
   );
 }
 
@@ -39,7 +41,9 @@ createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ErrorBoundary>
       <Provider store={store}>
-        <App />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </Provider>
     </ErrorBoundary>
   </React.StrictMode>,

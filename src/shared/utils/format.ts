@@ -7,3 +7,5 @@ export const calculateOrderTotal = (products: Product[]) =>
   products.reduce((total, product) => total + convertPrice(product.price, product.currency, 'USD'), 0);
 export const formatDate = (value: string) =>
   new Intl.DateTimeFormat('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(value));
+export const formatDateLong = (value: string) =>
+  new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(value));

@@ -4,13 +4,15 @@ import { selectProducts, selectSearch } from '../../app/store/selectors';
 import { createProduct, fetchProducts, removeProduct, setFilter, updateProduct } from '../../app/store/productsSlice';
 import { showToast } from '../../app/store/uiSlice';
 import type { Product, ProductType } from '../../shared/types/domain';
-import { formatCurrency, formatDate } from '../../shared/utils/format';
+import { convertPrice, formatCurrency, formatDate, formatDateLong } from '../../shared/utils/format';
 import { ConfirmModal } from '../../shared/components/ConfirmModal';
 import { ProductForm, type ProductFormValues } from '../../shared/components/ProductForm';
+
 export default function ProductsPage() {
   const dispatch = useAppDispatch();
   const products = useAppSelector(selectProducts);
   const allProducts = useAppSelector((state) => state.products.items);
+  const orders = useAppSelector((state) => state.orders.items);
   const filter = useAppSelector((state) => state.products.filter);
   const loading = useAppSelector((state) => state.products.loading);
   const error = useAppSelector((state) => state.products.error);
@@ -48,14 +50,14 @@ export default function ProductsPage() {
     <>
       <div className="heading">
         <div>
-          <label className="font-semibold tracking-widest text-slate-400">КАТАЛОГ</label>
+          <label>КАТАЛОГ</label>
           <h1 className="text-3xl font-bold tracking-tight">Продукты</h1>
           <p>Все товары складского учёта{query && ` · поиск: ${query}`}</p>
         </div>
         <div className="flex gap-2">
           <select
             aria-label="Фильтр по типу"
-            className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm"
+            className="rounded-xl border bg-white px-4 py-3 text-sm shadow-sm"
             value={filter}
             onChange={(event) => dispatch(setFilter(event.target.value as ProductType | 'all'))}
           >
@@ -81,45 +83,54 @@ export default function ProductsPage() {
         </div>
       )}
       {!loading && !products.length && (
-        <div className="empty rounded-2xl border border-dashed border-slate-300 bg-white">Продукты не найдены</div>
+        <div className="empty rounded-2xl border border-dashed bg-white">Продукты не найдены</div>
       )}
-      <div className="table overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div className="table overflow-hidden rounded-2xl border bg-white shadow-sm">
         <table>
           <thead>
             <tr>
               <th>ТОВАР</th>
               <th>ТИП</th>
-              <th>СТАТУС</th>
+              <th>ПРИХОД</th>
               <th>ГАРАНТИЯ</th>
               <th>ЦЕНА</th>
               <th />
             </tr>
           </thead>
           <tbody>
-            {products.map((product) => (
-              <tr className="hover:bg-indigo-50/40" key={product.id}>
-                <td>
-                  <b>{product.name}</b>
-                  <small>{product.serialNumber}</small>
-                </td>
-                <td>{product.type}</td>
-                <td>
-                  <span className="status ok">● {product.status}</span>
-                </td>
-                <td>{formatDate(product.warrantyUntil)}</td>
-                <td>
-                  <b>{formatCurrency(product.price, product.currency)}</b>
-                </td>
-                <td>
-                  <button className="mr-3 text-indigo-600" onClick={() => setEditing(product)}>
-                    Изменить
-                  </button>
-                  <button className="text-rose-500" onClick={() => setRemoveId(product.id)}>
-                    Удалить
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {products.map((product) => {
+              const orderName =
+                orders.find((order) => order.id === product.orderId)?.name ?? `Приход #${product.orderId}`;
+              return (
+                <tr className="hover:bg-indigo-50/40" key={product.id}>
+                  <td>
+                    <b>{product.name}</b>
+                    <small>{product.serialNumber}</small>
+                  </td>
+                  <td>
+                    {product.type}
+                    <small>{product.status}</small>
+                  </td>
+                  <td>{orderName}</td>
+                  <td>
+                    {formatDate(product.warrantyUntil)}
+                    <small>{formatDateLong(product.warrantyUntil)}</small>
+                  </td>
+                  <td>
+                    <b>{formatCurrency(product.price, product.currency)}</b>
+                    <small>{formatCurrency(convertPrice(product.price, product.currency, 'EUR'), 'EUR')}</small>
+                  </td>
+                  <td>
+                    <button className="mr-3 text-indigo-600" onClick={() => setEditing(product)}>
+                      Изменить
+                    </button>
+                    <button className="text-rose-500" onClick={() => setRemoveId(product.id)}>
+                      Удалить
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -134,7 +145,7 @@ export default function ProductsPage() {
       )}
       {editing && (
         <div className="backdrop">
-          <div className="modal rounded-2xl border border-slate-100 p-7 shadow-2xl">
+          <div className="modal rounded-2xl p-7">
             <button className="modal-close" aria-label="Закрыть" onClick={() => setEditing(null)}>
               ×
             </button>
