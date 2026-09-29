@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '../../app/store/hooks';
 import { selectSelectedOrder, selectVisibleOrders } from '../../app/store/selectors';
 import { createOrder, fetchOrders, removeOrder, selectOrder } from '../../app/store/ordersSlice';
@@ -16,6 +17,8 @@ import { InventoryChart } from '../../shared/components/InventoryChart';
 import { useOrderStatistics } from '../../shared/workers/useOrderStatistics';
 
 export default function OrdersPage() {
+  const { t } = useTranslation();
+  const currency = useAppSelector(state => state.settings.currency);
   const dispatch = useAppDispatch();
   const orders = useAppSelector(selectVisibleOrders);
   const allOrders = useAppSelector((state) => state.orders.items);
@@ -27,7 +30,9 @@ export default function OrdersPage() {
   useEffect(() => {
     void dispatch(fetchOrders());
   }, [dispatch]);
-  const statistics = useOrderStatistics(allOrders.flatMap((order) => order.products));
+  
+  const allProducts = useMemo(() => allOrders.flatMap((order) => order.products), [allOrders]);
+  const statistics = useOrderStatistics(allProducts);
   const notify = (message: string, type: 'success' | 'error') => dispatch(showToast({ message, type }));
   const remove = () => {
     if (confirm === null) return;
@@ -44,7 +49,7 @@ export default function OrdersPage() {
       <div className="heading">
         <div>
           <label>ОБЗОР СКЛАДА</label>
-          <h1 className="text-3xl font-bold tracking-tight">Приходы</h1>
+          <h1 className="text-3xl font-bold tracking-tight">{t('orders')}</h1>
           <p>История поступлений на склад</p>
         </div>
         <button
@@ -69,7 +74,7 @@ export default function OrdersPage() {
             </div>
             <div className="rounded-2xl border bg-white p-4 shadow-sm">
               <small>Стоимость</small>
-              <strong className="mt-1 block text-2xl">{formatCurrency(statistics.totalValue, 'USD')}</strong>
+              <strong className="mt-1 block text-2xl">{formatCurrency(convertPrice(statistics.totalValue, 'USD', currency), currency)}</strong>
             </div>
             <div className="rounded-2xl border bg-white p-4 shadow-sm">
               <small>Типов товаров</small>
@@ -111,8 +116,8 @@ export default function OrdersPage() {
                     <td>{order.supplier}</td>
                     <td>{order.products.length}</td>
                     <td>
-                      <b>{formatCurrency(total, 'USD')}</b>
-                      <small>{formatCurrency(convertPrice(total, 'USD', 'EUR'), 'EUR')}</small>
+                      <b>{formatCurrency(convertPrice(total, 'USD', currency), currency)}</b>
+                      
                     </td>
                   </tr>
                 );
@@ -136,8 +141,8 @@ export default function OrdersPage() {
                   <small>{product.serialNumber}</small>
                 </b>
                 <strong>
-                  {formatCurrency(product.price, product.currency)}
-                  <small>{formatCurrency(convertPrice(product.price, product.currency, 'EUR'), 'EUR')}</small>
+                  {formatCurrency(convertPrice(product.price, product.currency, currency), currency)}
+                  
                 </strong>
               </div>
             ))}
@@ -173,7 +178,7 @@ export default function OrdersPage() {
                       name: values.productName,
                       type: values.type,
                       price: values.price,
-                      warrantyUntil: values.warrantyDate,
+                      warrantyUntil: values.warrantyDate, quantity: values.quantity,
                     },
                   }),
                 )

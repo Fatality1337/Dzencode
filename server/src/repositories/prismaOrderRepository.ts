@@ -41,15 +41,15 @@ export class PrismaOrderRepository implements OrderRepositoryContract {
           name: input.name,
           supplier: input.supplier,
           products: {
-            create: {
+            create: Array.from({ length: input.product.quantity || 1 }).map((_, i) => ({
               name: input.product.name,
-              serialNumber: `NEW-${Date.now()}`,
+              serialNumber: `NEW-${Date.now()}-${i}`,
               type: input.product.type,
               status: 'Свободен',
               price: input.product.price,
               currency: 'USD',
               warrantyUntil: new Date(input.product.warrantyUntil),
-            },
+            }))
           },
         },
         include: { products: true },

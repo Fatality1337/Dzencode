@@ -5,7 +5,7 @@ import type { Order } from '../types/domain';
 export interface CreateOrderPayload {
   name: string;
   supplier: string;
-  product: { name: string; type: string; price: number; warrantyUntil: string };
+  product: { name: string; type: string; price: number; warrantyUntil: string; quantity?: number };
 }
 export const ordersApi = {
   list: () =>

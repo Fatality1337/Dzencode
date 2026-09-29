@@ -21,7 +21,7 @@ export interface Order {
 export interface CreateOrderInput {
   name: string;
   supplier: string;
-  product: { name: string; type: string; price: number; warrantyUntil: string };
+  product: { name: string; type: string; price: number; warrantyUntil: string; quantity: number };
 }
 export interface Group {
   id: number;

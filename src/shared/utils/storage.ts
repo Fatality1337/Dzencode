@@ -8,10 +8,14 @@ export const storage = {
     }
   },
   set<T>(key: string, value: T) {
-    window.localStorage.setItem(key, JSON.stringify(value));
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(key, JSON.stringify(value));
+    }
   },
   remove(key: string) {
-    window.localStorage.removeItem(key);
+    if (typeof window !== 'undefined') {
+      window.localStorage.removeItem(key);
+    }
   },
 };
 

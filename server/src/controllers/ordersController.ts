@@ -10,6 +10,7 @@ const createSchema = z.object({
     type: z.string().min(1),
     price: z.number().positive(),
     warrantyUntil: z.string().date(),
+    quantity: z.number().int().positive().default(1),
   }),
 });
 export const listOrders = async (_req: Request, res: Response) => res.json(await service.list());

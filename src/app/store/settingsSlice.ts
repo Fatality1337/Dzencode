@@ -3,7 +3,7 @@ export interface SettingsState {
   language: 'ru' | 'en' | 'uk';
   currency: 'USD' | 'EUR' | 'UAH';
 }
-const saved = window.localStorage.getItem('inventory-language');
+const saved = typeof window !== 'undefined' ? window.localStorage.getItem('inventory-language') : null;
 const slice = createSlice({
   name: 'settings',
   initialState: { language: saved === 'en' || saved === 'uk' ? saved : 'ru', currency: 'USD' } as SettingsState,

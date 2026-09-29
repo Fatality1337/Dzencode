@@ -65,7 +65,7 @@ const resources = {
 };
 i18n.use(initReactI18next).init({
   resources,
-  lng: localStorage.getItem('inventory-language') ?? 'ru',
+  lng: typeof window !== 'undefined' ? localStorage.getItem('inventory-language') ?? 'ru' : 'ru',
   fallbackLng: 'en',
   interpolation: { escapeValue: false },
 });

@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+﻿import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 export function NavigationMenu() {
   const { t } = useTranslation();
@@ -6,10 +6,10 @@ export function NavigationMenu() {
     ['/orders', 'orders', '↗'],
     ['/groups', 'groups', '◇'],
     ['/products', 'products', '▣'],
-    ['/users', 'users', '♙'],
+
     ['/settings', 'settings', '⚙'],
   ];
-  links.push(['/warehouses', 'warehouses', '⌖']);
+
   return (
     <aside className="sidebar flex min-h-screen w-64 flex-col border-r border-slate-200 bg-white px-4 py-7 shadow-sm">
       <div className="brand flex items-center gap-2 text-xl font-bold tracking-tight">
@@ -34,7 +34,7 @@ export function NavigationMenu() {
           </NavLink>
         ))}
       </nav>
-      <div className="mt-auto border-t border-slate-100 pt-5 text-xs text-slate-500">ⓘ Нужна помощь?</div>
+      
     </aside>
   );
 }

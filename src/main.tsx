@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+﻿import React, { Suspense, lazy } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
@@ -6,7 +6,6 @@ import { store } from './app/store';
 import { AppShell } from './app/layout/AppShell';
 import { ErrorBoundary } from './app/providers/ErrorBoundary';
 import { useAppSelector } from './app/store/hooks';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './app/styles/global.css';
 import './shared/i18n';
 
@@ -14,10 +13,10 @@ const OrdersPage = lazy(() => import('./pages/OrdersPage/OrdersPage'));
 const ProductsPage = lazy(() => import('./pages/ProductsPage/ProductsPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage/NotFoundPage'));
 const GroupsPage = lazy(() => import('./pages/GroupsPage/GroupsPage'));
-const UsersPage = lazy(() => import('./pages/UsersPage/UsersPage'));
+
 const SettingsPage = lazy(() => import('./pages/SettingsPage/SettingsPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage/LoginPage'));
-const WarehousesPage = lazy(() => import('./pages/WarehousesPage/WarehousesPage'));
+
 
 function App() {
   const { pathname } = useLocation();
@@ -34,9 +33,9 @@ function App() {
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/products" element={<ProductsPage />} />
             <Route path="/groups" element={<GroupsPage />} />
-            <Route path="/users" element={<UsersPage />} />
+
             <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/warehouses" element={<WarehousesPage />} />
+
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>

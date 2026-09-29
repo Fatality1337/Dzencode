@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '../../app/store/hooks';
 import { selectProducts, selectSearch } from '../../app/store/selectors';
 import { createProduct, fetchProducts, removeProduct, setFilter, updateProduct } from '../../app/store/productsSlice';
@@ -9,6 +10,8 @@ import { ConfirmModal } from '../../shared/components/ConfirmModal';
 import { ProductForm, type ProductFormValues } from '../../shared/components/ProductForm';
 
 export default function ProductsPage() {
+  const { t } = useTranslation();
+  const currency = useAppSelector(state => state.settings.currency);
   const dispatch = useAppDispatch();
   const products = useAppSelector(selectProducts);
   const allProducts = useAppSelector((state) => state.products.items);
@@ -22,6 +25,13 @@ export default function ProductsPage() {
   useEffect(() => {
     void dispatch(fetchProducts());
   }, [dispatch]);
+  
+  const ordersMap = useMemo(() => {
+    const map = new Map<number, string>();
+    orders.forEach(o => map.set(o.id, o.name));
+    return map;
+  }, [orders]);
+  
   const types = [...new Set(allProducts.map((product) => product.type))];
   const notify = (message: string, type: 'success' | 'error') => dispatch(showToast({ message, type }));
   const save = (value: ProductFormValues) => {
@@ -51,7 +61,7 @@ export default function ProductsPage() {
       <div className="heading">
         <div>
           <label>КАТАЛОГ</label>
-          <h1 className="text-3xl font-bold tracking-tight">Продукты</h1>
+          <h1 className="text-3xl font-bold tracking-tight">{t('products')}</h1>
           <p>Все товары складского учёта{query && ` · поиск: ${query}`}</p>
         </div>
         <div className="flex gap-2">
@@ -100,7 +110,7 @@ export default function ProductsPage() {
           <tbody>
             {products.map((product) => {
               const orderName =
-                orders.find((order) => order.id === product.orderId)?.name ?? `Приход #${product.orderId}`;
+                ordersMap.get(product.orderId) ?? `Приход #${product.orderId}`;
               return (
                 <tr className="hover:bg-indigo-50/40" key={product.id}>
                   <td>
@@ -117,8 +127,8 @@ export default function ProductsPage() {
                     <small>{formatDateLong(product.warrantyUntil)}</small>
                   </td>
                   <td>
-                    <b>{formatCurrency(product.price, product.currency)}</b>
-                    <small>{formatCurrency(convertPrice(product.price, product.currency, 'EUR'), 'EUR')}</small>
+                    <b>{formatCurrency(convertPrice(product.price, product.currency, currency), currency)}</b>
+                    
                   </td>
                   <td>
                     <button className="mr-3 text-indigo-600" onClick={() => setEditing(product)}>
