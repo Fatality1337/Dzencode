@@ -1,0 +1,1 @@
+import { NavLink } from 'react-router-dom'; export function NavigationMenu() { return <aside className="sidebar"><div className="brand"><i>i</i> inventory</div><div className="workspace">●　Основной склад⌄</div><nav><NavLink to="/orders">▣　Приходы</NavLink><NavLink to="/products">▤　Продукты</NavLink></nav></aside>; }
