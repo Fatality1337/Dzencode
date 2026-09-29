@@ -1,0 +1,3 @@
+type EventName='ORDER_CREATED'|'ORDER_DELETED'|'PRODUCT_FILTERED'; type Handler=(payload:Record<string,unknown>)=>void;
+class EventBus { private handlers=new Map<EventName,Set<Handler>>(); on(name:EventName,handler:Handler){const set=this.handlers.get(name)||new Set<Handler>();set.add(handler);this.handlers.set(name,set);return()=>set.delete(handler)} emit(name:EventName,payload:Record<string,unknown>){this.handlers.get(name)?.forEach((handler)=>handler(payload))} }
+export const eventBus=new EventBus();

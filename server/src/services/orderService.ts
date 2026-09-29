@@ -1,0 +1,2 @@
+import { eventBus } from '../events/eventBus.js'; import { OrderRepository } from '../repositories/orderRepository.js';
+export class OrderService { constructor(private readonly repository=new OrderRepository()){} list(){return this.repository.findAll()} get(id:number){return this.repository.findById(id)} delete(id:number){const deleted=this.repository.delete(id);if(deleted)eventBus.emit('ORDER_DELETED',{id});return deleted} }

@@ -1,0 +1,1 @@
+import {Router} from 'express'; import {getOrder,listOrders,removeOrder} from '../controllers/ordersController.js'; import {listProducts} from '../controllers/productsController.js'; const router=Router();router.get('/orders',listOrders).get('/orders/:id',getOrder).delete('/orders/:id',removeOrder).get('/products',listProducts);export default router;

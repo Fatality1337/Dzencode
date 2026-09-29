@@ -1,0 +1,2 @@
+import {describe,expect,it} from 'vitest';import reducer,{deleteOrder} from '../src/app/store/ordersSlice';import {seedOrders} from '../src/shared/data/seed';import productsReducer,{setFilter} from '../src/app/store/productsSlice';
+describe('redux slices',()=>{it('deletes selected order',()=>{const state=reducer({items:seedOrders,selectedId:1,loading:false,error:null},deleteOrder(1));expect(state.items).toHaveLength(2);expect(state.selectedId).toBeNull()});it('stores product filter',()=>expect(productsReducer(undefined,setFilter('Ноутбуки')).filter).toBe('Ноутбуки'))});

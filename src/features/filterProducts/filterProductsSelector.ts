@@ -1,0 +1,1 @@
+import {createSelector} from '@reduxjs/toolkit'; import type {RootState} from '../../app/store'; const allProducts=(state:RootState)=>state.products.items;const filter=(state:RootState)=>state.products.filter;export const selectFilteredProducts=createSelector([allProducts,filter],(products,current)=>products.filter((product)=>current==='all'||product.type===current));

@@ -5,6 +5,8 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { store } from './app/store';
 import { AppShell } from './app/layout/AppShell';
 import './app/styles/global.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './shared/i18n';
 
 const OrdersPage = lazy(() => import('./pages/OrdersPage/OrdersPage'));
 const ProductsPage = lazy(() => import('./pages/ProductsPage/ProductsPage'));
@@ -20,3 +22,4 @@ function App() {
 }
 
 createRoot(document.getElementById('root')!).render(<React.StrictMode><Provider store={store}><App /></Provider></React.StrictMode>);
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));

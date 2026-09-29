@@ -1,0 +1,1 @@
+import {apiClient} from './client'; import type {Order} from '../types/domain'; export const ordersApi={list:()=>apiClient.get<Order[]>('/orders').then((r)=>r.data),get:(id:number)=>apiClient.get<Order>(`/orders/${id}`).then((r)=>r.data),remove:(id:number)=>apiClient.delete(`/orders/${id}`)};

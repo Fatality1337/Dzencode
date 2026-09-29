@@ -1,0 +1,2 @@
+import { orders, products } from '../data.js'; import type { Order } from '../domain.js';
+export class OrderRepository { findAll():Order[]{return orders} findById(id:number){return orders.find((order)=>order.id===id)} delete(id:number){const index=orders.findIndex((order)=>order.id===id);if(index<0)return false;orders.splice(index,1);for(let i=products.length-1;i>=0;i-=1)if(products[i].orderId===id)products.splice(i,1);return true} }

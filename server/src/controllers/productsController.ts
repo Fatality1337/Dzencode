@@ -1,0 +1,1 @@
+import type {Request,Response} from 'express'; import { ProductService } from '../services/productService.js'; const service=new ProductService(); export const listProducts=(_req:Request,res:Response)=>res.json(service.list());
