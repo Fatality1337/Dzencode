@@ -17,6 +17,7 @@ const GroupsPage = lazy(() => import('./pages/GroupsPage/GroupsPage'));
 const UsersPage = lazy(() => import('./pages/UsersPage/UsersPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage/SettingsPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage/LoginPage'));
+const WarehousesPage = lazy(() => import('./pages/WarehousesPage/WarehousesPage'));
 
 function App() {
   const { pathname } = useLocation();
@@ -35,6 +36,7 @@ function App() {
             <Route path="/groups" element={<GroupsPage />} />
             <Route path="/users" element={<UsersPage />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/warehouses" element={<WarehousesPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>

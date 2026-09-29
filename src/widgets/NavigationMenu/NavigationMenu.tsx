@@ -8,7 +8,8 @@ export function NavigationMenu() {
     ['/products', 'products', '▣'],
     ['/users', 'users', '♙'],
     ['/settings', 'settings', '⚙'],
-  ] as const;
+  ];
+  links.push(['/warehouses', 'warehouses', '⌖']);
   return (
     <aside className="sidebar flex min-h-screen w-64 flex-col border-r border-slate-200 bg-white px-4 py-7 shadow-sm">
       <div className="brand flex items-center gap-2 text-xl font-bold tracking-tight">
