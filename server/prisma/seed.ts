@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 const groups = [
@@ -82,7 +83,14 @@ const orders = [
 
 async function main() {
   for (const group of groups) await prisma.group.upsert({ where: { name: group.name }, update: group, create: group });
-  for (const user of users) await prisma.user.upsert({ where: { email: user.email }, update: user, create: user });
+  for (const user of users) {
+    const passwordHash = bcrypt.hashSync('password123', 12);
+    await prisma.user.upsert({
+      where: { email: user.email },
+      update: { ...user, passwordHash },
+      create: { ...user, passwordHash },
+    });
+  }
   for (const data of orders) {
     const order = await prisma.order.upsert({
       where: { id: data.id },

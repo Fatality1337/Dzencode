@@ -11,22 +11,25 @@ import {
   updateGroup,
   updateUser,
 } from '../controllers/managementController.js';
+import { login } from '../controllers/authController.js';
+import { requireAuth } from '../auth.js';
 const router = Router();
+router.post('/auth/login', login);
 router
   .get('/orders', listOrders)
   .post('/orders', createOrder)
   .get('/orders/:id', getOrder)
-  .delete('/orders/:id', removeOrder)
+  .delete('/orders/:id', requireAuth, removeOrder)
   .get('/products', listProducts)
-  .post('/products', createProduct)
-  .patch('/products/:id', updateProduct)
-  .delete('/products/:id', deleteProduct)
+  .post('/products', requireAuth, createProduct)
+  .patch('/products/:id', requireAuth, updateProduct)
+  .delete('/products/:id', requireAuth, deleteProduct)
   .get('/groups', listGroups)
-  .post('/groups', createGroup)
-  .patch('/groups/:id', updateGroup)
-  .delete('/groups/:id', deleteGroup)
+  .post('/groups', requireAuth, createGroup)
+  .patch('/groups/:id', requireAuth, updateGroup)
+  .delete('/groups/:id', requireAuth, deleteGroup)
   .get('/users', listUsers)
-  .post('/users', createUser)
-  .patch('/users/:id', updateUser)
-  .delete('/users/:id', deleteUser);
+  .post('/users', requireAuth, createUser)
+  .patch('/users/:id', requireAuth, updateUser)
+  .delete('/users/:id', requireAuth, deleteUser);
 export default router;

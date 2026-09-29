@@ -44,5 +44,6 @@ model User {
   name      String
   email     String @unique
   role      String
+  passwordHash String @default("")
   createdAt DateTime @default(now())
 }
