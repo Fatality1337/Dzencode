@@ -6,3 +6,5 @@ export type ProductStatus = 'Свободен' | 'В ремонте' | 'Спис
 export interface Product { id: ProductId; name: string; serialNumber: string; type: ProductType; status: ProductStatus; price: number; currency: Currency; warrantyUntil: string; orderId: OrderId; image?: string; }
 export interface Order { id: OrderId; name: string; createdAt: string; supplier: string; products: Product[]; }
 export interface Settings { language: 'ru' | 'en'; currency: Currency; }
+export interface Group { id:number; name:string; description:string; }
+export interface User { id:number; name:string; email:string; role:string; }

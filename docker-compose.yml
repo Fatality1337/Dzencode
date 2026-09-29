@@ -17,6 +17,7 @@ services:
     build: { context: ., dockerfile: server/Dockerfile }
     environment:
       DATABASE_URL: mysql://inventory:inventory@mysql:3306/inventory
+      USE_DATABASE: "true"
       PORT: 4000
       CLIENT_URL: http://localhost:5173
     ports: ["4000:4000"]

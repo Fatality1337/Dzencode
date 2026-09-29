@@ -1,1 +1,1 @@
-import { defineConfig } from 'vite'; import react from '@vitejs/plugin-react'; import tailwindcss from '@tailwindcss/vite'; export default defineConfig({ plugins:[react(),tailwindcss()] });
+import { defineConfig } from 'vite'; import react from '@vitejs/plugin-react'; import tailwindcss from '@tailwindcss/vite'; export default defineConfig({ plugins:[react(),tailwindcss()], build:{rollupOptions:{output:{manualChunks:{graphql:['@apollo/client','graphql'],router:['react-router-dom'],redux:['@reduxjs/toolkit','react-redux']}}}} });

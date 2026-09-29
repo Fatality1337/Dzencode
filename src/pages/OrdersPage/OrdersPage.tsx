@@ -4,6 +4,7 @@ import { selectOrders, selectSelectedOrder } from '../../app/store/selectors';
 import { createOrder, fetchOrders, removeOrder, selectOrder } from '../../app/store/ordersSlice';
 import { calculateOrderTotal, formatCurrency, formatDate } from '../../shared/utils/format';
 import { CreateOrderForm } from '../../shared/components/CreateOrderForm';
+import { useOrderStatistics } from '../../shared/workers/useOrderStatistics';
 
 export default function OrdersPage() {
   const dispatch = useAppDispatch();
@@ -12,10 +13,10 @@ export default function OrdersPage() {
   const loading = useAppSelector((state) => state.orders.loading);
   const error = useAppSelector((state) => state.orders.error);
   const [confirm, setConfirm] = useState<number | null>(null); const [createOpen, setCreateOpen] = useState(false);
-  useEffect(() => { void dispatch(fetchOrders()); }, [dispatch]);
+  useEffect(() => { void dispatch(fetchOrders()); }, [dispatch]); const statistics=useOrderStatistics(orders.flatMap((order)=>order.products));
   return <>
     <div className="heading"><div><label className="font-semibold tracking-widest text-slate-400">ОБЗОР СКЛАДА</label><h1 className="text-3xl font-bold tracking-tight text-slate-900">Приходы</h1><p>История поступлений на склад</p></div><button className="primary inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 font-semibold text-white shadow-lg shadow-indigo-200 transition hover:-translate-y-0.5 hover:bg-indigo-700" onClick={() => setCreateOpen(true)}>＋ Новый приход</button></div>
-    {loading && <div className="page-loading">Загрузка приходов…</div>}{error && <div className="alert alert-danger">{error}</div>}
+    {loading && <div className="page-loading">Загрузка приходов…</div>}{error && <div className="alert alert-danger">{error}</div>}{statistics&&<div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-3"><div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"><small className="text-slate-400">Товаров</small><strong className="mt-1 block text-2xl">{statistics.totalProducts}</strong></div><div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"><small className="text-slate-400">Стоимость</small><strong className="mt-1 block text-2xl">{formatCurrency(statistics.totalValue)}</strong></div><div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"><small className="text-slate-400">Типов товаров</small><strong className="mt-1 block text-2xl">{Object.keys(statistics.byType).length}</strong></div></div>}
     <div className="income"><div className="table"><table><thead><tr><th>ПРИХОД</th><th>ПОСТАВЩИК</th><th>ТОВАРОВ</th><th>СТОИМОСТЬ</th></tr></thead><tbody>{orders.map((order) => <tr className={selected?.id === order.id ? 'sel' : ''} onClick={() => dispatch(selectOrder(order.id))} key={order.id}><td><b>{order.name}</b><small>{order.id} · {formatDate(order.createdAt)}</small></td><td>{order.supplier}</td><td>{order.products.length}</td><td><b>{formatCurrency(calculateOrderTotal(order.products))}</b></td></tr>)}</tbody></table></div>
       {selected && <aside className="detail"><label>ДЕТАЛИ ПРИХОДА</label><h3>{selected.name}</h3><small>{selected.supplier}</small>{selected.products.map((product) => <div className="mini" key={product.id}><span>📦</span><b>{product.name}<small>{product.serialNumber}</small></b><strong>{formatCurrency(product.price, product.currency)}</strong></div>)}<button className="danger" onClick={() => setConfirm(selected.id)}>♲ Удалить приход</button></aside>}
     </div>{confirm && <div className="backdrop"><div className="modal"><h2>Удалить приход?</h2><p>Связанные товары также будут удалены.</p><button className="secondary" onClick={() => setConfirm(null)}>Отмена</button><button className="danger" onClick={() => { void dispatch(removeOrder(confirm)); setConfirm(null); }}>Удалить</button></div></div>}

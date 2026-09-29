@@ -7,3 +7,5 @@ export const products: Product[] = [
  {id:5,name:'Sony WH-1000XM5',serialNumber:'SNY-WH5-781',type:'Аксессуары',status:'Списан',price:349,currency:'USD',warrantyUntil:'2025-09-01',orderId:3},
 ];
 export const orders: Order[] = [1,2,3].map((id) => ({ id, name:['Поставка техники Apple','Офисная периферия','Аудио и аксессуары'][id-1], createdAt:`2024-09-${String(13-id).padStart(2,'0')}T10:30:00Z`, updatedAt:`2024-09-${String(13-id).padStart(2,'0')}T10:30:00Z`, supplier:['Apple Distribution','TechnoHub LLC','Sound Store'][id-1], products:products.filter((product)=>product.orderId===id) }));
+export const groups=[{id:1,name:'Рабочая техника',description:'Ноутбуки и мониторы'},{id:2,name:'Аксессуары',description:'Периферия и аудио'},{id:3,name:'Мобильные устройства',description:'Смартфоны и планшеты'}];
+export const users=[{id:1,name:'Алексей Морозов',email:'alexey@inventory.io',role:'Администратор' as const},{id:2,name:'Мария Волкова',email:'maria@inventory.io',role:'Менеджер склада' as const},{id:3,name:'Иван Петров',email:'ivan@inventory.io',role:'Наблюдатель' as const}];

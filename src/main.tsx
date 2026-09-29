@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { store } from './app/store';
 import { AppShell } from './app/layout/AppShell';
+import { ErrorBoundary } from './app/providers/ErrorBoundary';
 import './app/styles/global.css';
 import './shared/i18n';
 
@@ -26,5 +27,5 @@ function App() {
   </Routes></Suspense></AppShell></BrowserRouter>;
 }
 
-createRoot(document.getElementById('root')!).render(<React.StrictMode><Provider store={store}><App /></Provider></React.StrictMode>);
+createRoot(document.getElementById('root')!).render(<React.StrictMode><ErrorBoundary><Provider store={store}><App /></Provider></ErrorBoundary></React.StrictMode>);
 if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
