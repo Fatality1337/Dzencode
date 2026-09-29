@@ -1,32 +1,34 @@
 # Inventory Warehouse
 
-Production-like warehouse SPA: React/Vite frontend, typed Redux state, Express API, GraphQL, Socket.IO, Prisma/MySQL and Docker.
+Production-like warehouse management SPA for incomes, products, groups and users.
+
+## Stack
+
+React 19, TypeScript, Vite, Redux Toolkit, React Router, Axios, Apollo GraphQL, Tailwind CSS, Socket.IO, Express, Prisma, MySQL, Vitest and Playwright.
 
 ## Features
 
-- Orders with detail panel, calculated totals, currencies and confirmation delete.
-- Products with selector-based filtering and warranty dates.
-- Lazy React Router routes, 404, i18n RU/EN/UK, Web Storage, Web Worker and PWA offline fallback.
-- REST, GraphQL, Socket.IO active sessions, EventBus and Prisma `Order 1:N Product` schema.
+- Orders/incomes with calculated totals, currencies, details panel, creation and confirmation delete.
+- Full product CRUD with Zod validation, type filtering and global search.
+- Group and user CRUD with edit forms, confirmation delete and role management.
+- REST API for commands and health checks; GraphQL for nested order/product reads.
+- Socket.IO active sessions and realtime data refresh through an in-memory event bus.
+- Web Worker statistics, PWA manifest/service worker, i18n (RU/EN/UK) and Web Storage.
+- Responsive Tailwind/BEM interface with loading, error, empty and toast states.
 
 ## Architecture
 
 ```text
 UI -> Redux/API -> REST or GraphQL -> controller -> service -> repository -> Prisma/MySQL
-Browser -> Socket.IO -> session manager -> broadcast
-Controller -> EventBus -> websocket side effects
+Browser -> Socket.IO -> session manager -> sessions/data broadcasts
+Controller -> EventBus -> websocket and logging side effects
 ```
 
-```text
-src/{app, pages, widgets, shared/{api,components,data,hooks,i18n,types,utils,workers}}
-server/src/{controllers,events,graphql,repositories,routes,services,websocket}
-server/prisma/{schema.prisma,seed.ts}
-test/  e2e/
-```
+Frontend is feature-oriented: `app`, `pages`, `widgets`, `features`, `entities` and `shared`. Backend follows route -> controller -> service -> repository separation.
 
-## Installation
+## Local development
 
-Requires Node.js 22+ and npm 10+.
+Requirements: Node.js 22+, npm 10+.
 
 ```bash
 npm install
@@ -35,35 +37,45 @@ npm run db:generate
 npm run dev
 ```
 
-Vite runs on `5173`; API runs on `4000`. Environment variables are documented in `.env.example`.
+Frontend: `http://localhost:5173`. API: `http://localhost:4000`.
 
-## REST API
+## Docker and MySQL
 
-`GET /health`, `GET /api/orders`, `GET /api/orders/:id`, `GET /api/products`, `DELETE /api/orders/:id`.
-
-REST is used for resource operations and health checks. Controllers delegate to services/repositories and production errors do not expose stack traces.
-
-## GraphQL API
-
-`POST /graphql` supports `orders`, `order(id)`, `products` and `deleteOrder(id)`. GraphQL is useful for nested order/product reads; REST remains simpler for commands and health checks.
-
-## WebSocket and events
-
-Socket.IO is the source of truth for active connections. `sessions:changed` is broadcast on connect/disconnect. `ORDER_DELETED` travels through the in-memory EventBus and becomes `orders:changed`.
-
-## Database and Docker
+Docker Desktop must be running.
 
 ```bash
-npm run db:migrate
-npm run db:seed
-docker compose up --build
+docker compose up -d --build
+docker compose ps
+docker compose logs -f backend
 ```
 
-Compose starts frontend `5173`, backend `4000` and MySQL `3306`. Prisma schema is in `server/prisma/schema.prisma`.
+Compose starts `mysql`, `backend` and `frontend`. Backend uses `USE_DATABASE=true`, runs `prisma migrate deploy` before startup and connects to MySQL through the internal service name. To seed the database after the containers start:
 
-## PWA, i18n and Worker
+```bash
+docker compose exec backend npm run db:seed
+```
 
-`public/manifest.webmanifest` and `public/sw.js` provide installability and offline fallback. `orderStatistics.worker.ts` performs aggregate calculations outside the UI thread. Translations live in `src/shared/i18n`; language preference uses Web Storage.
+The migration and seed are in `server/prisma`. Never use `docker compose down -v` unless you intentionally want to delete the local MySQL volume.
+
+## API
+
+REST endpoints:
+
+```text
+GET    /health
+GET    /api/orders
+GET    /api/orders/:id
+POST   /api/orders
+DELETE /api/orders/:id
+GET    /api/products
+POST   /api/products
+PATCH  /api/products/:id
+DELETE /api/products/:id
+GET/POST/PATCH/DELETE /api/groups
+GET/POST/PATCH/DELETE /api/users
+```
+
+GraphQL is available at `POST /graphql` with `orders`, `order(id)`, `products` and `deleteOrder(id)`. REST is kept for resource commands and health checks; GraphQL is used where nested reads are convenient.
 
 ## Testing and scripts
 
@@ -71,16 +83,19 @@ Compose starts frontend `5173`, backend `4000` and MySQL `3306`. Prisma schema i
 npm run typecheck
 npm run lint
 npm test
-npm run test:e2e
 npm run build
-npm run build:server
+npm run test:e2e
 npm run format
 ```
 
-Unit tests cover totals, currency conversion, date formatting and reducers. Playwright covers navigation, order selection/delete surface and product flow. Run `npx playwright install` before E2E.
+Unit/selector tests cover totals, currency conversion, dates, reducers and product filtering. Playwright covers order deletion, product filtering and active sessions between browser contexts. Install browsers once with `npx playwright install`.
 
-The repository has a working in-memory repository so the API can run without MySQL; Prisma schema and seed are ready for the database adapter. JWT/maps were not added because this task has no auth or geospatial workflow.
+## Environment
 
-## Verification
+Copy `.env.example` to `.env`. Database credentials and API URLs are environment variables; secrets are not committed.
 
-The repository passes `npm run typecheck`, `npm run lint`, `npm test`, `npm run build` and `npm run build:server`.
+## PWA and deployment
+
+`public/manifest.webmanifest` and `public/sw.js` provide installability and a basic offline fallback. Build the frontend with `npm run build` and serve `dist`; run the backend with `npm run build:server && npm start`. For production, use Docker/VPS for the API and MySQL and Vercel/Netlify or Nginx for the SPA.
+
+JWT and maps are intentionally omitted because this warehouse task has no authentication or geospatial workflow.
