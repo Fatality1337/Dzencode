@@ -1,0 +1,3 @@
+module.exports=[46202,a=>{"use strict";var b=a.i(7997);a.s(["default",0,function({children:a}){return(0,b.jsx)("html",{lang:"en",children:(0,b.jsx)("body",{style:{margin:0,fontFamily:"system-ui, sans-serif"},children:a})})},"metadata",0,{title:"Inventory SSR",description:"Warehouse management system"}])},25146,function(a){a.n(a.i(46202))}];
+
+//# sourceMappingURL=next-app_app_layout_tsx_16-k5ya._.js.map
