@@ -3,9 +3,9 @@ import tsPlugin from '@typescript-eslint/eslint-plugin';
 import reactHooks from 'eslint-plugin-react-hooks';
 
 export default [
-  { ignores: ['dist/**', 'node_modules/**', 'server/dist/**'] },
+  { ignores: ['dist/**', 'node_modules/**', 'server/dist/**', 'next-app/.next/**'] },
   {
-    files: ['src/**/*.ts', 'src/**/*.tsx', 'server/**/*.ts', 'test/**/*.ts', 'test/**/*.tsx'],
+    files: ['src/**/*.ts', 'src/**/*.tsx', 'server/**/*.ts', 'test/**/*.ts', 'test/**/*.tsx', 'next-app/**/*.ts', 'next-app/**/*.tsx'],
     languageOptions: {
       parser: tsParser,
       parserOptions: { ecmaVersion: 'latest', sourceType: 'module', ecmaFeatures: { jsx: true } },

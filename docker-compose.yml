@@ -20,6 +20,7 @@ services:
       USE_DATABASE: 'true'
       PORT: 4000
       CLIENT_URL: http://localhost:5173
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
     ports: ['4000:4000']
     depends_on:
       mysql: { condition: service_healthy }

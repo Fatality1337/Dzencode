@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '../../app/store/hooks';
 import { setSearch } from '../../app/store/uiSlice';
+import { logout } from '../../app/store/authSlice';
 import { useActiveSessions } from '../../shared/hooks/useActiveSessions';
 export function TopMenu() {
   const [now, setNow] = useState(new Date());
   const search = useAppSelector((state) => state.ui.search);
   const dispatch = useAppDispatch();
   const sessions = useActiveSessions();
+  const user = useAppSelector((state) => state.auth.user);
   const { t } = useTranslation();
   useEffect(() => {
     const timer = window.setInterval(() => setNow(new Date()), 1000);
@@ -28,6 +30,8 @@ export function TopMenu() {
       <span className="flex items-center gap-3 text-xs text-slate-500">
         ◷ {now.toLocaleDateString('ru-RU')} {now.toLocaleTimeString('ru-RU')} · {t('activeSessions')}:{' '}
         <b className="rounded-full bg-emerald-50 px-2 py-1 text-emerald-600">{sessions}</b>
+        {user && <span className="hidden border-l border-slate-200 pl-3 sm:inline">{user.email}</span>}
+        <button type="button" className="rounded-lg border border-slate-200 px-3 py-1.5 font-medium hover:bg-slate-50" onClick={() => dispatch(logout())}>Выйти</button>
       </span>
     </header>
   );
