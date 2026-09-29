@@ -97,5 +97,6 @@ Copy `.env.example` to `.env`. Database credentials and API URLs are environment
 ## PWA and deployment
 
 `public/manifest.webmanifest` and `public/sw.js` provide installability and a basic offline fallback. Build the frontend with `npm run build` and serve `dist`; run the backend with `npm run build:server && npm start`. For production, use Docker/VPS for the API and MySQL and Vercel/Netlify or Nginx for the SPA.
+JWT authentication is implemented for protected routes and user sessions. Maps are integrated using react-leaflet to display warehouse locations.
 
-JWT and maps are intentionally omitted because this warehouse task has no authentication or geospatial workflow.
+A standalone database schema file (`database-schema.sql`) is included in the root directory for easy inspection in MySQL Workbench.
