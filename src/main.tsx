@@ -5,6 +5,7 @@ import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-route
 import { store } from './app/store';
 import { AppShell } from './app/layout/AppShell';
 import { ErrorBoundary } from './app/providers/ErrorBoundary';
+import { useAppSelector } from './app/store/hooks';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './app/styles/global.css';
 import './shared/i18n';
@@ -15,9 +16,14 @@ const NotFoundPage = lazy(() => import('./pages/NotFoundPage/NotFoundPage'));
 const GroupsPage = lazy(() => import('./pages/GroupsPage/GroupsPage'));
 const UsersPage = lazy(() => import('./pages/UsersPage/UsersPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage/SettingsPage'));
+const LoginPage = lazy(() => import('./pages/LoginPage/LoginPage'));
 
 function App() {
   const { pathname } = useLocation();
+  const token = useAppSelector((state) => state.auth.token);
+  if (!token && pathname !== '/login') return <Navigate to="/login" replace />;
+  if (token && pathname === '/login') return <Navigate to="/orders" replace />;
+  if (pathname === '/login') return <Suspense fallback={null}><LoginPage /></Suspense>;
   return (
     <AppShell>
       <div key={pathname} className="route-view">

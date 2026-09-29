@@ -14,3 +14,5 @@ export const storage = {
     window.localStorage.removeItem(key);
   },
 };
+
+export const AUTH_TOKEN_KEY = 'inventory.auth.token';
