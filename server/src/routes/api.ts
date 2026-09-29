@@ -12,7 +12,7 @@ import {
   updateUser,
 } from '../controllers/managementController.js';
 import { login } from '../controllers/authController.js';
-import { requireAuth } from '../auth.js';
+import { requireAuth, requireRole } from '../auth.js';
 const router = Router();
 router.post('/auth/login', login);
 router
@@ -29,7 +29,7 @@ router
   .patch('/groups/:id', requireAuth, updateGroup)
   .delete('/groups/:id', requireAuth, deleteGroup)
   .get('/users', listUsers)
-  .post('/users', requireAuth, createUser)
-  .patch('/users/:id', requireAuth, updateUser)
-  .delete('/users/:id', requireAuth, deleteUser);
+  .post('/users', requireAuth, requireRole('Administrator', 'Администратор'), createUser)
+  .patch('/users/:id', requireAuth, requireRole('Administrator', 'Администратор'), updateUser)
+  .delete('/users/:id', requireAuth, requireRole('Administrator', 'Администратор'), deleteUser);
 export default router;

@@ -32,3 +32,14 @@ export function requireAuth(req: Request, res: Response, next: NextFunction): vo
     res.status(401).json({ message: 'Invalid or expired token' });
   }
 }
+
+export function requireRole(...roles: string[]) {
+  return (req: Request, res: Response, next: NextFunction): void => {
+    const user = res.locals.user as AuthUser | undefined;
+    if (!user || !roles.includes(user.role)) {
+      res.status(403).json({ message: 'Insufficient permissions' });
+      return;
+    }
+    next();
+  };
+}
